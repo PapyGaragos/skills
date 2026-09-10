@@ -1,12 +1,13 @@
 ---
 name: one-thing
-description: Re-derive the next action from the project's goal across every axis of progress, and classify everything else.
-disable-model-invocation: true
+description: Derive the one action to do next from a stated objective, and sort everything else into Must, Should, Could and Won't. Use when asked what to do next, and as the first step of a workflow that picks its own target.
 ---
 
 # One thing
 
-Run at a session's start to choose a target, or mid-session when the work has stopped moving.
+One action, derived, plus a classification of everything else on the table.
+
+Run at a session's start to choose a target, mid-session when the work has stopped moving, or as a workflow's first step.
 
 Derive first. Classify what was already on the table afterwards.
 
@@ -14,17 +15,27 @@ Derive first. Classify what was already on the table afterwards.
 
 Deferring something says it is not first. It does not say it is worthless. Most of what gets deferred here is real work that matters later, so state the deferral as a scheduling fact and give the condition that makes it relevant again.
 
+## What this derives
+
+The ladder records how a rung was reached. A rung advances the one above it without completing it, so the bottom rung is the only one that is an action.
+
+Axes divide progress toward the root. They say nothing about which files the work touches, so two axes routinely land in the same file. The winner is one action for one worker.
+
+A requirement that pulls against the project's direction is a project management question. This skill flags it in one line and derives anyway.
+
 ## Procedure
 
-### 1. Read the goal and the axes
+### 1. Read the root and the axes
 
-Find where the project states its goal, and quote it verbatim. Projects keep it in different places: a readme, design pillars, a vision document, a tracker's milestones.
+The root is the objective the derivation starts from, and only the invocation supplies it. With none supplied, the root is the project's own goal, whatever the session has been discussing: find where the project states it and quote it verbatim. Projects keep it in a readme, design pillars, a vision document, a tracker's milestones.
 
-In the same pass, find how the project divides progress toward that goal: pillars, epics, milestones, named workstreams. That division is the axis list. One axis is a legitimate answer.
+Read the project's direction, wherever the project records it. Treat it as a rung already derived to produce the root. Whoever supplied the root holds the rungs between the two; they stay unwritten and unreported. When the project records no direction beyond the root, the root is the top rung.
 
-Infer whatever the project leaves unstated, show the inference to the user, and wait for confirmation or correction before continuing. Where no reply is possible, run on the inference and label it inline, `Goal (inferred, unconfirmed):` and `Axes (inferred, unconfirmed):`. A wrong goal or a wrong axis makes the winner wrong, and the label is what makes that reviewable.
+In the same pass, find how the root divides progress: pillars, epics, milestones, named workstreams. That division is the axis list. One axis is a legitimate answer.
 
-Root at the project's goal, never the session's. The session goal is what drifted.
+Infer whatever is unstated, show the inference to the user, and wait for confirmation or correction before continuing. Where no reply is possible, run on the inference and label it inline, `Root (inferred, unconfirmed):` and `Axes (inferred, unconfirmed):`. A wrong root or a wrong axis makes the winner wrong, and the label is what makes that reviewable.
+
+A requirement arriving from outside the project's written context enters here. When it names something to achieve, it is the root. Otherwise it shapes every ladder as a constraint. It contradicts the project's direction when doing it undoes or blocks something that direction requires. Cost, absence from any plan, and having no written owner are not contradictions. On a contradiction, name in one line what it undoes and derive anyway.
 
 ### 2. Derive one ladder per axis
 
@@ -38,7 +49,9 @@ Then test each bottom rung: does doing it make the rest of that axis easier or u
 
 ### 3. Pick the winner
 
-Across axes, ask the same question one level up: which bottom rung makes the most of the *other* axes' remaining work easier or unnecessary?
+Across axes, ask which bottom rung makes the most of the *other* axes' remaining work easier or unnecessary.
+
+Judge that against the project's direction read in step 1, not against the root, whenever the two differ. Two rungs can serve the root equally and the project's direction unequally, and that is the tiebreak.
 
 One winner. The losing bottom rungs are already concrete actions with real preconditions, and they become the Should bucket.
 
@@ -61,10 +74,10 @@ Emit and end. Disagreement afterwards is ordinary conversation.
 
 ## Output
 
-To the conversation, under twenty lines. Axis name in the left column, every axis showing its full ladder.
+To the conversation, under twenty lines. The first line quotes the root. Axis name in the left column, every axis showing its full ladder.
 
 ```
-Goal: anything I read gets into the vault as a usable note without me formatting it.
+Root: anything I read gets into the vault as a usable note without me formatting it.
 
 Capture    1. one command fetches, extracts and writes a note
            Now: wire the extractor's output into the note writer
@@ -82,6 +95,10 @@ Should: map metadata onto frontmatter, once notes are being written
 Should: readme install step, once the command runs end to end
 Could:  rework error messages
 ```
+
+The project's direction never appears. It selects the winner and it stays out of the report.
+
+A contradiction adds one line, `Contradicts: <what doing this undoes>`, directly under the root.
 
 One line per rung. A rung needing two lines is two rungs. The verdict carries the reasoning, in two or three lines.
 
