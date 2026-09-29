@@ -1,105 +1,78 @@
 ---
 name: one-thing
-description: Derive the one action to do next from a stated objective, and sort everything else into Must, Should, Could and Won't. Use when asked what to do next, and as the first step of a workflow that picks its own target.
+description: Ask the focusing question once, at one horizon, and answer it with a single effort. Use whenever someone asks what to do next, what the one thing is, what to focus on or prioritize (right now, this session, this week, this milestone, someday), when work has stalled or there are too many options to pick from, and as the first step of a workflow that picks its own target.
 ---
 
 # One thing
 
-One action, derived, plus a classification of everything else on the table.
+Ask the focusing question once and give it one good answer. This skill does not plan, rank a backlog or break the answer into steps.
 
-Run at a session's start to choose a target, mid-session when the work has stopped moving, or as a workflow's first step.
+## The question
 
-Derive first. Classify what was already on the table afterwards.
+"Based on *anchor*, what's the ONE Thing I can do *horizon* such that by doing it everything else will be easier or unnecessary?"
 
-## Not now
+The question drives the reasoning. The output doesn't repeat it. Each part carries weight:
 
-Deferring something says it is not first. It does not say it is worthless. Most of what gets deferred here is real work that matters later, so state the deferral as a scheduling fact and give the condition that makes it relevant again.
+- The horizon sets how big the answer may be.
+- The anchor is the effort one horizon wider, the one the answer serves. Without it, the answer drifts toward whatever feels most urgent.
+- "Such that by doing it" asks for leverage, not importance. Many things are important. The question wants the one that makes the others move.
+- "Easier or unnecessary" is the test every candidate has to pass, and it is only checkable against a concrete "everything else".
 
-## What this derives
+## Pick the horizon
 
-The ladder records how a rung was reached. A rung advances the one above it without completing it, so the bottom rung is the only one that is an action.
+When the invocation names a horizon, use it. Otherwise pick the horizon just below the anchor's, the next one narrower than the parent objective. Do not drop to the narrowest horizon the request allows, because the answer would then serve the next step instead of the anchor. Two lists of horizons, widest first, serve as examples:
 
-Axes divide progress toward the root. They say nothing about which files the work touches, so two axes routinely land in the same file. The winner is one action for one worker.
+- someday, five years, this year, this month, this week, today, right now
+- the project's final goal, the release or milestone in progress, the piece of work in progress (its branch, issue or PR), this session, the next action
 
-A requirement that pulls against the project's direction is a project management question. This skill flags it in one line and derives anyway.
+Pick a horizon from either list, or name one that fits the situation better.
 
-## Procedure
+## Frame the anchor
 
-### 1. Read the root and the axes
+When the invocation doesn't name the anchor, infer it from the project and mark it `(inferred)`, because a wrong anchor makes a good-looking answer serve the wrong goal.
 
-The root is the objective the derivation starts from, and only the invocation supplies it. With none supplied, the root is the project's own goal, whatever the session has been discussing: find where the project states it and quote it verbatim. Projects keep it in a readme, design pillars, a vision document, a tracker's milestones.
+Call the Skill tool with "as-effort" and reframe the anchor as an effort: its wanted state, its kind and its intent. The reframing is what the rest of the reasoning works from:
 
-Read the project's direction, wherever the project records it. Treat it as a rung already derived to produce the root. Whoever supplied the root holds the rungs between the two; they stay unwritten and unreported. When the project records no direction beyond the root, the root is the top rung.
+- The wanted state says what "done" looks like, so what is missing from it can be listed.
+- The kind says what "missing" means. An `achieve` anchor lacks whatever isn't true yet. A `maintain` anchor lacks nothing until something threatens it. An `optimize` anchor always has a next step past where it stands now.
+- The `so that` says what the anchor is for, which sizes the answer and breaks ties.
 
-In the same pass, find how the root divides progress: pillars, epics, milestones, named workstreams. That division is the axis list. One axis is a legitimate answer.
+Do not derive the anchor by asking the focusing question one horizon wider. That is a second question built on a guess, and this skill asks one. At the widest horizon there is no anchor. The question then starts at "What's the ONE Thing", and the output line naming the anchor is left out.
 
-Infer whatever is unstated, show the inference to the user, and wait for confirmation or correction before continuing. Where no reply is possible, run on the inference and label it inline, `Root (inferred, unconfirmed):` and `Axes (inferred, unconfirmed):`. A wrong root or a wrong axis makes the winner wrong, and the label is what makes that reviewable.
+## Answer it well
 
-A requirement arriving from outside the project's written context enters here. When it names something to achieve, it is the root. Otherwise it shapes every ladder as a constraint. It contradicts the project's direction when doing it undoes or blocks something that direction requires. Cost, absence from any plan, and having no written owner are not contradictions. On a contradiction, name in one line what it undoes and derive anyway.
+1. Name "everything else": the work within the horizon that serves the anchor. It comes from what the user raised this session, open tasks or tracker items, and what the anchor's kind says is missing. Without this list, "easier or unnecessary" can't be checked.
 
-### 2. Derive one ladder per axis
+2. For each candidate, ask what it makes easier and what it makes unnecessary, by name. The winner topples the most of the list. A candidate that produces only its own value is not the answer, however urgent it looks.
 
-At each rung ask: "Based on `<the rung above, verbatim>`, what is the one thing that would make everything else easier or unnecessary?"
+3. Size the answer to the horizon, big and specific. Big means it fills the horizon rather than a slice of it. Specific means someone could tell whether it happened. An answer can be doable (what you'd pick anyway), a stretch (at the edge of what you know how to do) or a possibility (past what has been done). To reach beyond doable, find what the best have done at this, then ask what the next step past it is. For a narrow horizon like the next action, the answer is small and the check is mostly about leverage.
 
-Two rungs minimum, four maximum, per axis. Stop when a rung is an action that can be started immediately rather than a category of work.
+4. Commit to one answer. When two candidates topple the same amount, the anchor's `so that` breaks the tie.
 
-Write each rung before asking the next question. A rung, once written, stands.
-
-Then test each bottom rung: does doing it make the rest of that axis easier or unnecessary? A first domino topples the next one. Work that produces only its own value is not one, so derive that axis again.
-
-### 3. Pick the winner
-
-Across axes, ask which bottom rung makes the most of the *other* axes' remaining work easier or unnecessary.
-
-Judge that against the project's direction read in step 1, not against the root, whenever the two differ. Two rungs can serve the root equally and the project's direction unequally, and that is the tiebreak.
-
-One winner. The losing bottom rungs are already concrete actions with real preconditions, and they become the Should bucket.
-
-### 4. Classify
-
-| Bucket | Meaning | Requires |
-|---|---|---|
-| Must | do now | the winning bottom rung, and only it |
-| Should | backlog, not now | the condition that makes it relevant |
-| Could | discarded | nothing |
-| Won't | rejected | a justification |
-
-Sort the losing bottom rungs, everything proposed this session, and whatever an attached tracker or backlog holds.
-
-When the winner appears nowhere on that list, say so.
-
-### 5. Stop
-
-Emit and end. Disagreement afterwards is ordinary conversation.
+5. Reframe the answer as an effort with as-effort, for its intent.
 
 ## Output
 
-To the conversation, under twenty lines. The first line quotes the root. Axis name in the left column, every axis showing its full ladder.
+Plain text, not in a code block. The fences below only mark the template. Nothing comes after the last line: the reasoning stays out of the output, and disagreement with the answer is ordinary conversation, not a reason to ask again.
 
 ```
-Root: anything I read gets into the vault as a usable note without me formatting it.
+In order to [<anchor horizon>] <anchor intent>:
 
-Capture    1. one command fetches, extracts and writes a note
-           Now: wire the extractor's output into the note writer
-Quality    1. notes land with correct frontmatter and links
-           Now: map extracted metadata onto the vault's frontmatter schema
-Adoption   1. someone else can install and run it
-           Now: write the install step in the readme
+[<horizon>] <intent>
 
-Capture wins. The other two act on notes that are never written: Quality has
-nothing to map, and Adoption documents a command that does not complete.
-Not previously on the table. The session had been discussing error messages.
-
-Must:   wire the extractor's output into the note writer
-Should: map metadata onto frontmatter, once notes are being written
-Should: readme install step, once the command runs end to end
-Could:  rework error messages
+Easier: <items>. Unnecessary: <items>.
 ```
 
-The project's direction never appears. It selects the winner and it stays out of the report.
+- A horizon label is the horizon's short name, a few words with no punctuation. Details belong in the intent.
+- The intent's verb shows the kind, so the kind itself stays out.
+- `Easier:` and `Unnecessary:` list names from the "everything else" list, separated by commas, without reasons. Leave out a label with no items.
 
-A contradiction adds one line, `Contradicts: <what doing this undoes>`, directly under the root.
+For example:
 
-One line per rung. A rung needing two lines is two rungs. The verdict carries the reasoning, in two or three lines.
+```
+In order to [this month] keep every invoice I receive in the ledger within a day, so that I never type one in (inferred):
 
-More axes means shallower ladders. The line budget is what trades them off.
+[this week] Establish a typed schema for invoice line items, so that the parser and the ledger agree on what an invoice holds.
+
+Easier: the mail watcher, bank reconciliation. Unnecessary: the manual cleanup script.
+```
