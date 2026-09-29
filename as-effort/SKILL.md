@@ -5,7 +5,7 @@ description: Reframe an objective, goal, task or piece of work as an effort, mea
 
 # As effort
 
-An effort is a state someone wants to be true. It names what should be true, never the work to get there, so its name survives a change of approach. A finished piece of work names an effort as the reason it was done.
+An effort is a state someone wants to be true. It names what should be true, never the work to get there, so its name survives a change of approach. A finished piece of work names an effort as the reason it was done. Its intent line gives an end state and a purpose, which people steer by once the plan stops fitting (ADP 6-0, 2026). When a plan broke, people given an intent chose as its author would only about half the time (Shattuck, 2000).
 
 ## What to produce
 
@@ -15,7 +15,7 @@ Three small things:
 - **Kind.** `achieve` is reached once, then done. `maintain` is held for as long as it matters. `optimize` is pushed as far as it will go.
 - **Intent.** One sentence, `<Verb> <end state>, so that <purpose>.` Its parts are fields too: the verb, the state, and the purpose. The purpose field is the text after `so that`, without those two words.
 
-When the request doesn't say otherwise, give one line:
+When the request doesn't say otherwise, give one line as plain text, not in a code block:
 
 ```
 [<kind>] <slug> : <Verb> <end state>, so that <purpose>.
@@ -43,7 +43,7 @@ When the request goes on to other work, such as a commit or a plan, give the eff
 
    The list is closed so the intent can't name work. Write, Build, Migrate and Implement are on no list. The verb comes from the kind's own row; if the verb that fits sits in another row, the kind is wrong. Make takes a thing and the state it ends in, never a thing alone. Have takes a thing that exists, never an event marked done.
 
-4. **Write the purpose.** The `so that` says how this state serves something larger. It does not restate the larger thing. If the input gives no purpose, infer the likeliest one and mark it `(guessed)` so the user can correct it. The mark goes right after the purpose, before the final period: `so that <purpose> (guessed).`
+4. **Write the purpose.** The `so that` says how this state serves something larger. It does not restate the larger thing. Then imagine the likeliest way to reach the state stops working. The purpose should help someone choose between two other ways. If it doesn't, it is too vague to steer by, so name the larger outcome that depends on the state. A purpose that only says the state is useful (restorable, responsive, trusted) restates it. If the input gives no purpose, infer the likeliest one and mark it `(guessed)` so the user can correct it. The mark goes right after the purpose, before the final period: `so that <purpose> (guessed).`
 
 One input sometimes holds two independent wanted states. Give two efforts rather than joining them under one sentence.
 
