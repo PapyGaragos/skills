@@ -34,7 +34,7 @@ When the invocation doesn't name the anchor, infer it from the project and mark 
 Call the Skill tool with "as-effort" and reframe the anchor as an effort: its wanted state, its kind and its intent. The reframing is what the rest of the reasoning works from:
 
 - The wanted state says what "done" looks like, so what is missing from it can be listed.
-- The kind says what "missing" means. An `achieve` anchor lacks whatever isn't true yet. A `maintain` anchor lacks nothing until something threatens it. An `optimize` anchor always has a next step past where it stands now.
+- The kind says what "missing" means. An `achieve` anchor lacks whatever isn't true yet. A `maintain` anchor lacks whatever isn't true yet, then nothing until something threatens it. An `optimize` anchor always has a next step past where it stands now.
 - The `so that` says what the anchor is for, which sizes the answer and breaks ties.
 
 Do not derive the anchor by asking the focusing question one horizon wider. That is a second question built on a guess, and this skill asks one. At the widest horizon there is no anchor. The question then starts at "What's the ONE Thing", and the output line naming the anchor is left out.
