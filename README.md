@@ -1,56 +1,61 @@
-# Skills
+# Keel
 
-Agent skills for goal-directed work. They frame a goal as an effort, meaning the state someone wants to be true rather than the work to get there. An effort gets written down as a file with its checks, and the work toward it gets a log that someone else can resume.
+Agents drift on long tasks, and fixed plans break at the first surprise.
 
-Scripts in those skills are bash and use only `awk`, `sed`, `grep` and `find`.
+Keel breaks a high-level goal down until each piece is small enough for one agent to take on alone. That agent gets a well-defined state to reach, an approach to follow, the bigger picture both serve, and a way to signal when the course needs correcting. Every choice is logged for audit.
+
+It keeps a graph of efforts (states someone wants, with a definition of done) and approaches (ways to reach them), where every link says why a piece of work exists. The skills below build and maintain that graph as the work turns up surprises.
+
+## How it runs
+
+### From a goal to a plan
+
+1. **as-effort** turns the goal into an effort file, with criteria from **definition-of-done**.
+2. **propose-effort-approach** writes candidate approaches, reusing ones that already serve other efforts, and opens a question in the logbook.
+3. **decide-effort-approach** picks in a fresh agent, or hands the choice to a person.
+4. **refined-approach-efforts** turns the chosen approach's steps into child efforts and reports the criteria they leave open.
+5. Each child goes through the same cycle, until it is small enough for one agent to take on alone.
+
+### When the work meets reality
+
+An assumption turns out false, a criterion starts failing, or a step is missing. The working agent calls **propose-effort-approach** to reopen the choice, and **decide-effort-approach** keeps, switches or adds approaches. Nothing is deleted, so switching back finds the earlier work intact.
+
+### Brainstorming
+
+An idea floated mid-discussion goes through **propose-effort-approach** as one more candidate on the effort's open question. The question stays open until someone needs the choice.
+
+### Handing off and resuming
+
+Agents write to the logbook as they go. The next session runs `status` to see what is open, and a sub-agent given a node writes its findings under it.
 
 ## The skills
 
-Four building blocks each produce one part of an effort:
+| Skill | Does |
+|---|---|
+| **as-effort** | Reframes a goal or task as the state wanted, and writes the effort file. |
+| **definition-of-done** | States the conditions that mark an effort reached, held or good enough. |
+| **reliable-checks** | Names the most trustworthy check for a criterion and what a pass would miss. |
+| **as-approach** | Writes a way to reach an effort: its steps, assumptions, the criteria it covers and the ones it risks. |
+| **propose-effort-approach** | Lists candidate approaches, or reopens a choice when the work shows a problem. Never chooses. |
+| **decide-effort-approach** | Chooses with fresh context when the effort's criteria settle it, else leaves it to a person. |
+| **refined-approach-efforts** | Turns a chosen approach into child efforts and judges whether they cover the criteria. |
+| **effort-approach-graph** | Shows what an effort serves and what serves it, prevents duplicates, and audits for broken links and cycles. |
+| **logbook** | Keeps an append-only record of multi-step work. See below. |
 
-- **as-effort** turns a goal, task or ticket into an effort: a slug, a kind (`achieve`, `maintain` or `optimize`) and a one-line intent, `<Verb> <end state>, so that <purpose>.`
-- **definition-of-done** lists the few properties that decide whether a goal is met, each with the conditions that mark it, without saying how to check them.
-- **reliable-checks** describes the most trustworthy check for each condition (formal, execution, judge, intrinsic or human) and what a pass does and doesn't prove. It describes the check without writing or running it.
-- **key-tasks** names the intermediate states that every workable approach has to reach, without choosing an approach.
+## The logbook
 
-Two skills use them:
+The logbook is a plain-text tree of goals, steps, notes, blockers, questions and decisions, written by a script. It is append-only and paths never change, so effort files cite the node behind each decision. It also works on its own, outside any effort.
 
-- **to-effort-file** calls the four building blocks and writes the result to `<slug>-effort.md`. It links the file to the parent efforts it serves and lints the file with its own scripts.
-- **one-thing** asks "what's the one thing I can do at this horizon that makes everything else easier or unnecessary?" and answers with a single effort.
+Use it to:
 
-One skill stands apart:
+- resume after a session ends, with `status` showing what is open
+- hand work to sub-agents, each writing under its own node
+- keep dead ends on record so nobody retries them
+- store each decision with the options it beat and when a dropped one would come back
+- keep blockers visible until someone resolves them
+- give someone arriving cold a compact summary with `status` and `show`
 
-- **logbook** keeps a `<effort-name>.logbook` file recording the steps, surprises, questions and decisions of multi-step work, written through `scripts/logbook.sh`.
+## Install
 
-## How they call each other
-
-Skills call each other by name through the Skill tool, so install a skill together with everything it calls, under the same names.
-
-```
-to-effort-file ──> as-effort
-               ──> definition-of-done ──> as-effort
-               ──> reliable-checks    ──> definition-of-done  (only when given a goal with no conditions)
-               ──> key-tasks          ──> as-effort
-
-one-thing      ──> as-effort
-
-logbook        (calls nothing)
-```
-
-**Each building block also works on its own.** Ask for a definition of done, or how to check a property, and you get only that part.
-
-## A workflow
-
-1. **File the top-level goals.** Talk through the project's goals with the agent, then run `/to-effort-file` on each one and say it serves no other effort. It becomes a root effort.
-
-2. **File narrower efforts under them.** Run `/to-effort-file` on a smaller goal, sized for a session or a commit. It looks for `*-effort.md` files under the working directory, picks the ones this effort serves, and lists them in `contributes-to:`. It marks the parents it guessed with `# guessed`, so check those. The file's Serves section says how to check that the new effort moves each parent.
-
-3. **Work on the effort.** Point the agent at the file and ask for a log, for example `work on @<slug>-effort.md, keep a logbook`. The effort file says what done means and what limits to respect, and leaves the approach to the agent. The logbook records what the agent tried and why, and the Work section at the end of the effort file collects what the work produced. Several agents can write to the same logbook.
-
-4. **Resume.** After a reset or a handoff, `pick up the work from <effort-name>.logbook`. The agent starts from `logbook.sh status`, which shows the work in progress, the open questions and blockers, and the steps not started yet.
-
-`one-thing` could pick the effort for step 2: give it the existing effort files and a horizon, then file its answer with `/to-effort-file`. It hasn't been tested with the current versions of the effort skills, so treat that step as a suggestion for now.
-
-## License
-
-MIT, see [LICENSE](LICENSE).
+Copy or symlink to your relevant `skills/` folder. No setup script to run.
+The scripts used by the skills need bash 4 or newer.

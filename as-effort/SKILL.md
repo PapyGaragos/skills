@@ -1,6 +1,6 @@
 ---
 name: as-effort
-description: Reframe an objective, goal, task or piece of work as an effort, meaning the wanted state behind it rather than the work to reach it. Gives the effort's slug, its kind (achieve, maintain or optimize) and its one-line intent, `<Verb> <end state>, so that <purpose>.` Use when the user asks to phrase, name or reframe something as an effort, wants the intent line or `contributes-to:` slug for some work, wants an effort's fields in a given format (YAML, CSV, a table), asks what a task or ticket is really for, or hands over a goal and wants the state it aims at.
+description: Reframe an objective, goal, task or piece of work as an effort, meaning the wanted state behind it rather than the work to reach it. Gives the effort's slug, its kind (achieve, maintain or optimize) and its one-line intent, `<Verb> <end state>, so that <purpose>.` Use when the user asks to phrase, name or reframe something as an effort, wants the intent line or `contributes-to:` slug for some work, wants an effort's fields in a given format (YAML, CSV, a table), asks what a task or ticket is really for, or hands over a goal and wants the state it aims at. Also writes the effort down as a file, `<slug>-effort.md`, with its end state, definition of done, what serves its parent efforts and its limits: use when the user asks for an effort file, wants to write down, file or record an effort, or turns a goal, task or ticket into an effort to track work against.
 ---
 
 # As effort
@@ -23,7 +23,9 @@ When the request doesn't say otherwise, give one line as plain text, not in a co
 
 When the request names fields or a format (YAML, CSV, prose, a table), give only those fields, in that format. "The one-liner" means the intent alone, and "a name" means the slug alone.
 
-Stop there. Don't explain the choices. Add one line only for a guess that `(guessed)` doesn't already mark. Writing the full effort file, its checks, or finding its parent efforts is a separate job.
+Stop there. Don't explain the choices. Add one line only for a guess that `(guessed)` doesn't already mark.
+
+When the user wants the effort written down as a file, or another skill asks for one, read `references/effort-file.md` and follow it in place of this section. It takes the parents the caller gives, defines done and writes the file through this skill's scripts.
 
 When the request goes on to other work, such as a commit or a plan, give the effort line first anyway. That work names the effort by its slug as its reason. For the rest of the conversation, call the effort by its slug. Put the kind before it when that reads as a sentence: "this commit helps achieve `<slug>`". Don't restate the intent unless asked.
 

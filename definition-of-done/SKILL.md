@@ -1,6 +1,6 @@
 ---
 name: definition-of-done
-description: Say what counts as done for a task, goal or effort. Gives the few properties that decide success, each with the conditions that mark it reached, held, or good enough, without saying how to check them. Use when the user asks what should count as done, what success looks like, what the acceptance or exit criteria are, how they would know a goal is met, or wants a definition of done, and whenever another skill needs the success conditions of a goal.
+description: Say what counts as done for a task, goal or effort. Gives the properties that decide success, each with the conditions that mark it reached, held, or good enough, without saying how to check them. Use when the user asks what should count as done, what success looks like, what the acceptance or exit criteria are, how they would know a goal is met, or wants a definition of done, and whenever another skill needs the success conditions of a goal.
 ---
 
 # Definition of done
@@ -11,7 +11,7 @@ This skill decides what counts as done. It does not pick, write or run the check
 
 ## Steps
 
-1. **Name the properties that decide success.** Ask what would have to be true for the work to count, and keep only the properties where being wrong would matter. Most goals have one to three. Keep two properties apart when one could fail without the other, or when one is a matter of fact and the other a matter of judgment. Keep to the finished state: states that only matter on the way there belong to the plan, not to the definition of done.
+1. **Name the properties that decide success.** Ask what would have to be true for the work to count, and keep only the properties where being wrong would matter. Keep two properties apart when one could fail without the other, or when one is a matter of fact and the other a matter of judgment. Keep to the finished state: states that only matter on the way there belong to the plan, not to the definition of done.
 
 2. **State each property as an effort.** Call the Skill tool with "as-effort" and work out each property's default one-line form. The effort's slug becomes the property's name, and its end state is what the conditions describe. The effort lines stay out of the output, even though as-effort asks for them first. They shape the conditions, and the reader only needs the conditions. The kind sets their shape in step 3.
 
