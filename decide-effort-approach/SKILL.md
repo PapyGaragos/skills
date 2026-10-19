@@ -13,24 +13,13 @@ An approach covers some of the effort's criteria, listed under its `## Covers` h
 
 The effort file, the effort's logbook, and the path of the question, `How do we reach <effort-slug>?` or `Reconsider <slug>: <ground>`. Its branch holds what the proposers found while looking for ways and one option per approach, `<slug>: <lead line>`, its notes giving its approach file and any change to it waiting for a decision.
 
-## Brief
-
-Your last message is the brief, read by the proposer mid-task: two lines, all else in the logbook. The first is one of:
-
-- `chosen: <slug>, ...`
-- `kept: <slug>, ...`
-- `switched: <old-slug>, ... to <new-slug>, ...`
-- `needs a person: <why, in a few words>`
-
-When a criterion stays uncovered, the first line ends with `; uncovered: <criterion>, ...`, a ground for propose-effort-approach. The second is `logbook: <path> <node>`, the subtree where the decision was worked out, the same one the `decided by:` note names.
-
 ## Steps
 
 1. **Read and investigate.** The whole effort file, its intent's purpose included, and each option's approach file. `show` the question's branch and the earlier options the section's lines cite: they show who chose the current approach and why the others lost. Proposers look for ways and leave judging them to you: check whether each option's assumptions hold and what it takes and costs, reading what the project holds and trying what is cheap. Call the Skill tool with "logbook" and log what you read, try and find as you go, dead ends included, under the option concerned, or under the question when it bears on several.
 
-2. **Weigh.** For each option: the criteria it covers under its Covers heading for the effort, the covered criteria and limits it risks under its Risks heading, every covered one not risked claimed met, and whether its assumptions hold on the evidence. Then what it does for the other efforts its file reaches: what it risks under their headings counts against it as this effort's does, since the work done that way touches them too. Reaching them too settles nothing: no file says what that weighs. An option passing only with a smaller end state or fewer Definition of done entries does not pass: a reconsideration never shrinks the effort to fit a way. Changing the effort is its owner's call, through as-effort.
+2. **Weigh.** For each option: the criteria it covers under its Covers heading for the effort, the covered criteria and limits it risks under its Risks heading, every covered one not risked claimed met, and whether its assumptions hold on the evidence. Then what it does for the other efforts its file reaches: what it risks under their headings counts against it as this effort's does, since the work done that way touches them too. Reaching them too settles nothing: no file says what that weighs. An option passing only with a smaller end state or fewer Criteria entries does not pass: a reconsideration never shrinks the effort to fit a way. Changing the effort is its owner's call, through as-effort.
 
-3. **Decide, or leave it open.** Options covering different criteria do not compete: each one that passes may be chosen. Among options covering the same criterion, the criteria and purpose settle the choice when one meets what each other one risks or fails, and none has the reverse edge elsewhere. Options trading criteria against each other need a weight the files do not give, and the order of the Definition of done gives none. A criterion no passing option covers stays a gap: note it under the question and report it in the brief. Switching away from a choice a person made needs a person too; the `decided by:` note under the chosen approach's option shows who made it, and with none, take it as a person's. In either case, note why under the question, leave the files alone and brief `needs a person`. A person may give you the choice; record it as theirs.
+3. **Decide, or leave it open.** Options covering different criteria do not compete: each one that passes may be chosen. Among options covering the same criterion, the criteria and purpose settle the choice when one meets what each other one risks or fails, and none has the reverse edge elsewhere. Options trading criteria against each other need a weight the files do not give, and the order of the criteria gives none. A criterion no passing option covers stays a gap: note it under the question and report it in the brief. Switching away from a choice a person made needs a person too; the `decided by:` note under the chosen approach's option shows who made it, and with none, take it as a person's. In either case, note why under the question and brief `needs a person`. Still drop an option when another one covers every criterion it covers, risks nothing it doesn't, and meets something the dropped option risks or fails, unless a person chose the dropped option: the files settle that much, and the person then weighs fewer. Leave the other options as they are. A person may give you the choice; record it as theirs.
 
 4. **Record.**
    - For each chosen option, `decide FILE <option> --why "<the criteria or purpose that settled it>"`, then `note FILE <option> "decided by: <agent | the person's name>, <logbook path> <node>"`. It points to where the decision was worked out: the question's node when you decided here, the subtree recording a person's decision otherwise. When the option carries a change to its approach file, the `--why` names the change.
@@ -57,7 +46,16 @@ When a criterion stays uncovered, the first line ends with `; uncovered: <criter
 
    Note each child's outcome under the question.
 
-8. **Brief.**
+8. **Reply**, as the Output section says.
+
+## Output
+
+Once the decision is recorded, decide what goes back and in what form. Match the request against each mode below, read the reference of the one it fits, and follow it. Pick by what the request is for, not by what is quickest to give. The shape of the reply is in the reference and nowhere else, so read it before writing any reply, even a short answer to a person.
+
+| mode | when | reference |
+|---|---|---|
+| brief | the prompt names the effort file, logbook and question, as a proposer starts you, or a person asks which way the effort takes | `references/brief.md` |
+| fields | the request names fields or a format (YAML, JSON, CSV, a table) | `references/fields.md` |
 
 ## Example
 

@@ -19,4 +19,14 @@ Run `scripts/effort-approach-graph.sh` from this skill's directory, with `--root
 
 ## Place or audit
 
-This skill, with refined-approach-efforts, is responsible for plugging efforts and approaches correctly into the rest of the graph. To place one effort in the graph, finding its duplicate, parents and children, read `references/place.md` and follow it. To audit the graph, settling each problem the script prints and finding the duplicates, or to judge whether two slugs name one state, read `references/audit.md` and follow it. Each gives the output for its mode.
+This skill, with refined-approach-efforts, is responsible for plugging efforts and approaches correctly into the rest of the graph. To place one effort in the graph, finding its duplicate, parents and children, read `references/place.md` and follow it. To audit the graph, settling each problem the script prints and finding the duplicates, or to judge whether two slugs name one state, read `references/audit.md` and follow it. Each says what its result holds.
+
+## Output
+
+Once the placement or audit is worked out, decide whether anything goes back and in what form. When another skill's steps called this one, the mode is `carried`, whatever the call asks for, since its wording is the caller's and the result is theirs to use. Otherwise match the request against each mode below, read the reference of the one it fits, and follow it. Pick by what the request is for, not by what is quickest to give. The shape of the reply is in the reference and nowhere else, so read it before writing any reply, even a short answer to a person.
+
+| mode | when | reference |
+|---|---|---|
+| block | a person wants the placement or audit stated | `references/block.md` |
+| fields | the request names fields or a format (YAML, JSON, CSV, a table) | `references/fields.md` |
+| carried | another skill's steps called this one, or brought you to `place.md` or `audit.md` | `references/carried.md` |

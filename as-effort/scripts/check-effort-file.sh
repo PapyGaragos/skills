@@ -65,10 +65,10 @@ find_file() {
   fi
 }
 
-# The criteria a file's Definition of done names, in the file's order: the slug
+# The criteria a file's Criteria names, in the file's order: the slug
 # that opens each "- <slug>  Done when|Held when|Metric:" entry.
 criteria_of() {
-  awk '/^## / { s = $0; sub(/^## +/, "", s); sub(/[ \t]+$/, "", s); in_s = (s == "Definition of done"); next }
+  awk '/^## / { s = $0; sub(/^## +/, "", s); sub(/[ \t]+$/, "", s); in_s = (s == "Criteria"); next }
     in_s && /^- [a-z0-9]+(-[a-z0-9]+)*[ \t]+(Done when|Held when|Metric):/ { l = $0; sub(/^- /, "", l); sub(/[ \t].*/, "", l); print l }' "$1"
 }
 
@@ -214,7 +214,7 @@ if (( cl )); then
 fi
 
 # Sections, in the order write-effort-file.sh writes them.
-order=("End state" "Definition of done" "Serves" "Limits" "Approaches")
+order=("End state" "Criteria" "Serves" "Limits" "Approaches")
 declare -A rank=() at=() bullets=() serves_heads=()
 for i in "${!order[@]}"; do rank[${order[i]}]=$i; done
 line_re='^- \[([a-z]+)\] ([a-z0-9]+(-[a-z0-9]+)*) : (.+)$'
@@ -244,7 +244,7 @@ for (( i = 0; i < n; i++ )); do
   [[ -n ${l//[[:space:]]/} ]] || continue
 
   case $section in
-    "Definition of done")
+    "Criteria")
       [[ $l == "- "* ]] || continue  # prose and nested lines
       bullets[$section]=1
       # The slug is what children name in Serves, and what effort-approach-graph reads.
@@ -299,11 +299,11 @@ for (( i = 0; i < n; i++ )); do
   esac
 done
 
-for s in "End state" "Definition of done" "Serves"; do
+for s in "End state" "Criteria" "Serves"; do
   [[ -n ${at[$s]:-} ]] || problem 0 "missing section ## $s"
 done
-if [[ -n ${at["Definition of done"]:-} && -z ${bullets["Definition of done"]:-} ]]; then
-  problem "${at["Definition of done"]}" "section ## Definition of done names no criterion"
+if [[ -n ${at["Criteria"]:-} && -z ${bullets["Criteria"]:-} ]]; then
+  problem "${at["Criteria"]}" "section ## Criteria names no criterion"
 fi
 if [[ -n ${at[Limits]:-} && -z ${bullets[Limits]:-} ]]; then
   problem "${at[Limits]}" "section ## Limits is empty: leave it out when there are none"

@@ -4,13 +4,14 @@
 #
 # PATH names a node by position: 2.1 is the first child of the second goal. Commands that
 # add nodes accept 0 for the top level. Every write prints the nodes it touched with their
-# paths. Paths never change, so keep them instead of re-reading the tree.
+# paths. Paths never change, so keep them instead of re-reading the tree. Rerunning a write is
+# safe: an entry already there is not added twice, and a todo already done stays done.
 #
-#   plan     FILE PATH STEP... [--parallel]  todos to do in order (or in any order)
+#   plan     FILE PATH STEP... [--parallel]  todos to do in order (or in any order); at 0, one goal
 #   doing    FILE PATH TEXT                  a todo already under way
-#   did      FILE PATH TEXT...               todos already finished
+#   did      FILE PATH TEXT...               todos finished without being planned; a planned one takes done
 #   start    FILE PATH                       begin a planned todo
-#   done     FILE PATH                       finish a todo whose children are all closed
+#   done     FILE PATH                       finish a todo or goal whose children are all closed
 #   drop     FILE PATH REASON                abandon a todo and its open todos, or rule out an option
 #   note     FILE PATH TEXT...               context, source, justification: one fact each
 #   surprise FILE PATH TEXT                  something unexpected; steps to fix or bypass it go under it
@@ -18,14 +19,19 @@
 #   question FILE PATH TEXT                  something to find out
 #   option   FILE PATH TEXT...               candidate answers to a question or blocker
 #   decide   FILE PATH [CHOICE] [--over OPTION REASON]... [--why REASON]
-#            on a question or blocker: records CHOICE, and each OPTION as ruled out;
-#            on an option: confirms it. Options not ruled out stay open for later
+#            on a question or blocker: records CHOICE, and each OPTION as ruled out for good;
+#            on an option: confirms it. An option already recorded can be named by its path, its
+#            text or the name before its colon. Options not ruled out stay open for later:
+#            to say why one still possible was not picked, note it on that option
 #   status   FILE                            work in progress with its goals, open questions
 #                                            and blockers, todos not started; with their notes
 #   show     FILE [PATH]                     the whole tree, or the subtree at PATH
 #
 #   add FILE PATH "MARKER text"...   set FILE PATH MARKER   write markers directly
 set -euo pipefail
+
+# First line of every logbook, not a node: whoever opens the file learns how to write to it.
+HEADER="% logbook: write here only through the logbook skill's scripts/logbook.sh, which keeps the notation valid"
 
 die() { echo "logbook: $*" >&2; exit 1; }
 
@@ -52,6 +58,7 @@ allowed_children() {
 load() {
   [[ -f "$1" ]] || die "no such file: $1"
   mapfile -t LINES < "$1"
+  [[ "${LINES[0]:-}" == '% '* ]] || LINES=("$HEADER" "${LINES[@]}")
   number
 }
 
@@ -59,7 +66,7 @@ number() {
   PATHS=()
   local line lead d k p counts=()
   for line in "${LINES[@]}"; do
-    if [[ -z "${line// }" ]]; then PATHS+=(''); continue; fi
+    if [[ -z "${line// }" || "$line" == '% '* ]]; then PATHS+=(''); continue; fi
     lead="${line%%[! ]*}"; d=$(( ${#lead} / 2 ))
     counts[d]=$(( ${counts[d]:-0} + 1 ))
     for (( k = ${#counts[@]} - 1; k > d; k-- )); do unset 'counts[k]'; done
@@ -123,52 +130,60 @@ activate_ancestors() {
 }
 
 # Append items ("MARKER text") as the last children of node PATH $1, or of the top level for 0.
+# An item identical to a sibling already there is not added again, so rerunning a command is safe.
 insert() {
   local parent=$1; shift
   (( $# > 0 )) || die "nothing to add"
-  local pmark indent at pline
+  local item; for item in "$@"; do insert_one "$parent" "$item"; done
+}
+
+insert_one() {
+  local parent=$1 item=$2
+  local pmark indent at pline=0 d=0
   if [[ "$parent" == 0 ]]; then
     pmark=ROOT; indent=''; at=${#LINES[@]}
   else
     pline=$(find_line "$parent")
     pmark=$(marker "${LINES[$pline-1]}")
-    indent=$(printf '%*s' $(( ($(depth "${LINES[$pline-1]}") + 1) * 2 )) '')
+    d=$(( $(depth "${LINES[$pline-1]}") + 1 ))
+    indent=$(printf '%*s' $(( d * 2 )) '')
     at=$(subtree_end "$pline")
   fi
 
-  local allowed new=() item m
+  local allowed m i
   allowed=" $(allowed_children "$pmark") "
-  for item in "$@"; do
-    item="${item#"${item%%[![:space:]]*}"}"; item="${item%"${item##*[![:space:]]}"}"
-    [[ "$item" != *$'\n'* ]] || die "one line per item: $item"
-    m="${item%% *}"
-    [[ "$item" == *' '* && -n "${item#* }" ]] && is_marker "$m" \
-      || die "item must be MARKER TEXT with MARKER one of - = > . x # ! !! ?? ? => : $item"
-    [[ "$allowed" == *" $m "* ]] \
-      || die "'$m' cannot go under '$pmark' (allowed: $(allowed_children "$pmark"))"
-    if is_closed "$pmark" && is_open_todo "$m"; then
-      die "$parent is closed; add new work under an open node, or 0 for a new goal"
+  item="${item#"${item%%[![:space:]]*}"}"; item="${item%"${item##*[![:space:]]}"}"
+  [[ "$item" != *$'\n'* ]] || die "one line per item: $item"
+  m="${item%% *}"
+  [[ "$item" == *' '* && -n "${item#* }" ]] && is_marker "$m" \
+    || die "item must be MARKER TEXT with MARKER one of - = > . x # ! !! ?? ? => : $item"
+  [[ "$allowed" == *" $m "* ]] \
+    || die "'$m' cannot go under '$pmark' (allowed: $(allowed_children "$pmark"))"
+  if is_closed "$pmark" && is_open_todo "$m"; then
+    die "$parent is closed; add new work under an open node, or 0 for a new goal"
+  fi
+  for (( i = pline; i < at; i++ )); do
+    if [[ "${LINES[$i]}" == "$indent$item" ]]; then
+      echo "logbook: already at ${PATHS[$i]}, not added again" >&2
+      TOUCHED+=($(( i + 1 ))); LAST=$(( i + 1 )); return
     fi
-    new+=("$indent$item")
   done
 
-  local k count=${#new[@]}
-  for k in "${!TOUCHED[@]}"; do
-    (( TOUCHED[k] > at )) && TOUCHED[k]=$(( TOUCHED[k] + count ))
+  for i in "${!TOUCHED[@]}"; do
+    (( TOUCHED[i] > at )) && TOUCHED[i]=$(( TOUCHED[i] + 1 ))
   done
-  LINES=("${LINES[@]:0:$at}" "${new[@]}" "${LINES[@]:$at}")
+  LINES=("${LINES[@]:0:$at}" "$indent$item" "${LINES[@]:$at}")
   number
-  for (( k = 1; k <= count; k++ )); do
-    TOUCHED+=($(( at + k )))
-    case "$(marker "${LINES[$at+k-1]}")" in '>'|.) activate_ancestors $(( at + k )) ;; esac
-  done
-  LAST=$(( at + count ))
+  TOUCHED+=($(( at + 1 )))
+  case "$m" in '>'|.) activate_ancestors $(( at + 1 )) ;; esac
+  LAST=$(( at + 1 ))
 }
 
 # Change the marker of the node at line $1 to $2.
 mutate() {
   local line=$1 to=$2 from ok=''
   from=$(marker "${LINES[$line-1]}")
+  if [[ "$from" == "$to" ]]; then echo "logbook: ${PATHS[$line-1]} is already '$to'" >&2; TOUCHED+=("$line"); return; fi
   case "$from" in
     -|=) [[ "$to" == '>' || "$to" == . || "$to" == x ]] && ok=1 ;;
     '>') [[ "$to" == . || "$to" == x ]] && ok=1 ;;
@@ -210,7 +225,7 @@ cmd_add() {
   local file=$1 path=$2; shift 2
   if [[ -f "$file" ]]; then load "$file"; else
     [[ "$path" == 0 ]] || die "no such file: $file"
-    LINES=(); PATHS=()
+    LINES=("$HEADER"); PATHS=('')
   fi
   insert "$path" "$@"
   save "$file"
@@ -219,6 +234,9 @@ cmd_add() {
 cmd_plan() {
   local m=- args=() a
   for a in "$@"; do [[ "$a" == --parallel ]] && m='=' || args+=("$a"); done
+  # Several steps at 0 would each become a goal, when the first was meant as the goal over the rest.
+  (( ${#args[@]} <= 3 )) || [[ "${args[1]:-}" != 0 ]] \
+    || die "at 0, plan takes one goal: plan it, then plan its steps under the path it prints"
   cmd_append "$m" "${args[@]}"
 }
 
@@ -242,6 +260,20 @@ cmd_drop() {
   save "$file"
 }
 
+# Line (1-based) of the option child of line $1 (open, chosen or ruled out) whose path or text
+# is $2, or whose text starts with "$2:"; empty if none.
+find_option() {
+  local i end d t; end=$(subtree_end "$1"); d=$(depth "${LINES[$1-1]}")
+  for (( i = $1; i < end; i++ )); do
+    (( $(depth "${LINES[$i]}") == d + 1 )) || continue
+    t="${LINES[$i]#"${LINES[$i]%%[! ]*}"}"
+    t="${t#"$(marker "$t") "}"
+    case "$(marker "${LINES[$i]}")" in '?'|'=>'|x) ;; *) continue ;; esac
+    [[ "${PATHS[$i]}" == "$2" || "$t" == "$2" || "$t" == "$2:"* ]] && { echo $(( i + 1 )); return; }
+  done
+  return 0
+}
+
 cmd_decide() {
   local file=$1 path=$2; shift 2
   local choice='' why='' over=()
@@ -249,34 +281,44 @@ cmd_decide() {
     case "$1" in
       --over) (( $# >= 3 )) && [[ -n "${3// }" ]] || die "--over takes an option and why it lost"; over+=("$2" "$3"); shift 3 ;;
       --why)  (( $# >= 2 )) || usage; why=$2; shift 2 ;;
+      -*) die "unknown flag $1: decide takes [CHOICE] [--over OPTION REASON]... [--why REASON]" ;;
       *) [[ -z "$choice" ]] || usage; choice=$1; shift ;;
     esac
   done
   load "$file"
-  local line m; line=$(find_line "$path"); m=$(marker "${LINES[$line-1]}")
+  local line m q chosen='' o k; line=$(find_line "$path"); m=$(marker "${LINES[$line-1]}")
   case "$m" in
-    '?')
-      [[ -z "$choice" && ${#over[@]} == 0 ]] \
-        || die "$path is an option: deciding confirms it as is, so give no CHOICE or --over"
-      mutate "$line" '=>'
-      [[ -z "$why" ]] || insert "$path" "# $why"
-      ;;
+    '?'|'=>')
+      [[ -z "$choice" ]] || die "$path is an option: deciding on it confirms it, so give no CHOICE"
+      q=${PATHS[$line-1]%.*}; chosen=${PATHS[$line-1]} ;;
     '??'|!!)
-      [[ -n "$choice" ]] || die "say what was decided"
-      local i end d; end=$(subtree_end "$line"); d=$(depth "${LINES[$line-1]}")
-      for (( i = line; i < end; i++ )); do
-        if (( $(depth "${LINES[$i]}") == d + 1 )) && [[ "${LINES[$i]#"${LINES[$i]%%[! ]*}"}" == "? $choice" ]]; then
-          die "'$choice' is already option ${PATHS[$i]}: run decide on ${PATHS[$i]} to confirm it"
+      q=$path
+      [[ -n "$choice" || ${#over[@]} -gt 0 ]] || die "say what was decided"
+      if [[ -n "$choice" ]]; then
+        o=$(find_option "$line" "$choice")
+        if [[ -n "$o" ]]; then
+          [[ "$(marker "${LINES[$o-1]}")" != x ]] || die "'$choice' was ruled out at ${PATHS[$o-1]}"
+          chosen=${PATHS[$o-1]}
         fi
-      done
-      local k; for (( k = 0; k < ${#over[@]}; k += 2 )); do
-        insert "$path" "x ${over[k]}"; insert "${PATHS[$LAST-1]}" "# ${over[k+1]}"
-      done
-      insert "$path" "=> $choice"
-      [[ -z "$why" ]] || insert "${PATHS[$LAST-1]}" "# $why"
-      ;;
+      fi ;;
     *) die "$path is '$m'; decide answers a question, a blocker or an option. Record the question or blocker first." ;;
   esac
+  line=$(find_line "$q")
+  for (( k = 0; k < ${#over[@]}; k += 2 )); do
+    o=$(find_option "$line" "${over[k]}")
+    if [[ -z "$o" ]]; then insert "$q" "x ${over[k]}"; insert "${PATHS[$LAST-1]}" "# ${over[k+1]}"; continue; fi
+    [[ "${PATHS[$o-1]}" != "$chosen" && "$(marker "${LINES[$o-1]}")" != '=>' ]] \
+      || die "${PATHS[$o-1]} is chosen; --over rules out the options that lost"
+    [[ "$(marker "${LINES[$o-1]}")" == x ]] || mutate "$o" x
+    insert "${PATHS[$o-1]}" "# ${over[k+1]}"
+  done
+  if [[ -n "$chosen" ]]; then
+    mutate "$(find_line "$chosen")" '=>'
+    [[ -z "$why" ]] || insert "$chosen" "# $why"
+  elif [[ -n "$choice" ]]; then
+    insert "$q" "=> $choice"
+    [[ -z "$why" ]] || insert "${PATHS[$LAST-1]}" "# $why"
+  fi
   save "$file"
 }
 
@@ -324,6 +366,8 @@ cmd_status() {
 
 (( $# >= 2 )) || usage
 cmd=$1; shift
+# A help flag anywhere asks for the usage, never for a node named after it.
+for a in "$@"; do [[ $a == -h || $a == --help ]] && usage; done
 case "$cmd" in
   show)     (( $# <= 2 )) || usage; cmd_show "$@" ;;
   status)   (( $# == 1 )) || usage; cmd_status "$@" ;;

@@ -4,6 +4,8 @@ Read this to make sense of a `.logbook` file opened directly. `scripts/logbook.s
 
 A logbook is plain text. Each line is a node: indentation (two spaces per level) places it under its parent, then comes a marker, a space and the text. Top-level nodes are goals, which are todos like any other.
 
+The first line, starting with `% `, is a header and not a node: it tells whoever opens the file to write through the script.
+
 ## Markers
 
 | marker | node | meaning |

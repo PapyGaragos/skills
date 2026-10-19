@@ -17,15 +17,8 @@ Every edit found here touches efforts that others may own, and a wrong edge spre
    - **A cycle.** Find the edge whose child does not help bring about its parent and propose removing it.
 2. **Find the duplicates.** Compare every node with every other, and put each pair of duplicates in one group, testing every pair for overlap. For each group, keep the slug that has a file, or else the one that appears in the most places, and propose renaming every other place to it. When two members of a group both have files, the user decides how they merge, so the group's line reads `- <slug>, <slug>: merge to decide`, and no edit renames or moves anything between them.
 
-## Output
+## Result
 
-The answer is this block alone, with no sentence before or after it, and every line in its template's shape.
+The result holds the groups of duplicates and the edits. Edits change existing files, and each names one change someone could make without reading anything else: add `<slug>: []`, or `<slug>: [<approach>, ...]`, to `contributes-to:`, rename `<old>` to `<new>`, remove an entry. Take each edit's path and line from the script's output, which counts lines within each file.
 
-```
-duplicates:
-- <kept slug>: <the other slugs>
-edits:
-- <path>[:<line>]: <the change>
-```
-
-Write `none` as the whole value of an empty field, as in `edits: none`. Edits change existing files, and each names one change someone could make without reading anything else: add `<slug>: []`, or `<slug>: [<approach>, ...]`, to `contributes-to:`, rename `<old>` to `<new>`, remove an entry. Take each edit's path and line from the script's output, which counts lines within each file.
+Then pick how to give it from the Output section of this skill's SKILL.md.

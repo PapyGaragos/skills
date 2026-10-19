@@ -22,7 +22,7 @@ Above them sits `human`: a person decides. It is the only option when the proper
 
 ## Steps
 
-1. **Take the conditions as given.** The input may be a definition of done, a single condition, or a property. Its conditions are what a pass must show, so keep their wording. When the input is a goal with no conditions yet, call the Skill tool with "definition-of-done" on it first.
+1. **Take the conditions as given.** The input may be a definition of done, a single condition, or a property. Its conditions are what a pass must show, so keep their wording. When the input is a goal with no conditions yet, load the definition-of-done skill with the Skill tool first, leaving its arguments empty, and apply its steps yourself to the goal. A skill called with a request answers it and ends the run there.
 
 2. **Take the highest rung that covers each property.** Go down from `formal` and stop at the first rung whose check covers the property itself, not a neighboring property that is easier to check. A check that could be written counts; mark it `(to write)`. Skip a rung when its check would cost more than being wrong about the property. When the best check covers only part of the property, keep it and name the part it leaves out.
 
@@ -35,24 +35,15 @@ Watch for two traps while choosing. They decide which check you pick, and they s
 - Tests written after the work, by whoever did the work, tend to confirm what it does rather than what it should do. Specify tests from the goal, not from the finished work.
 - A judge given a vague question scores its own taste. Break a `judge` check into a few yes/no questions that can be answered from the output.
 
-## What to produce
+## Output
 
-One entry per property, its check in the shape of its conditions, as plain text, not in a code block:
+Once each property has its check, decide whether anything goes back and in what form. When another skill's steps called this one, the mode is `carried`, whatever the call asks for, since its wording is the caller's and the result is theirs to use. Otherwise match the request against each mode below, read the reference of the one it fits, and follow it. Pick by what the request is for, not by what is quickest to give. The shape of the reply is in the reference and nowhere else, so read it before writing any reply, even a short answer to a person.
 
-```
-<property>  [<form>] Done when: <condition>; <condition>. <what a pass proves, one clause>
-<property>  [<form>] Held when: <condition>; <condition>, checked <when>. <what a pass proves, one clause>
-<property>  [<form>] Metric: <what is measured, and how>, now <current value>, target <target>. <what a pass proves, one clause>
-            ground with: [<form>] <check, in the same shape>
-```
-
-The label names the form the check takes, in a few plain words a reader gets at a glance, such as `[proof]`, `[test]`, `[CI check]`, `[script]`, `[LLM review]`, `[self-review]` or `[human decision]`. The rung picked the check, and it stays out of the output.
-
-A check that doesn't exist yet carries `(to write)` right after its label: `[<form>] (to write) Done when: ...`.
-
-Say what a pass proves, not why the rung was picked. That is where a check that misses part of its property shows. The `ground with` line appears only under `judge` and `intrinsic`. A `human` entry reads `Done when: <who> decides or approves <what>`. When an automated proxy exists, add it on a `proxy:` line.
-
-Stop after the last entry, with no preamble, advice paragraphs, fallback plans or advice on which check to start with. Don't write the check, run it, or explain the hierarchy. Another skill may read the output as it is, so keep this shape even when talking to a person.
+| mode | when | reference |
+|---|---|---|
+| entries | a person wants the checks stated | `references/entries.md` |
+| fields | the request names fields or a format (YAML, JSON, CSV, a table) | `references/fields.md` |
+| carried | another skill's steps called this one | `references/carried.md` |
 
 ## When it doesn't fit
 

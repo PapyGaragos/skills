@@ -73,7 +73,7 @@ effort_file() {
 # its limit slugs as "l <slug>" lines.
 names_of() {
   awk '/^## / { s = $0; sub(/^## +/, "", s); sub(/[ \t]+$/, "", s); next }
-    s == "Definition of done" && /^- [a-z0-9]+(-[a-z0-9]+)*[ \t]+(Done when|Held when|Metric):/ {
+    s == "Criteria" && /^- [a-z0-9]+(-[a-z0-9]+)*[ \t]+(Done when|Held when|Metric):/ {
       l = $0; sub(/^- /, "", l); sub(/[ \t].*/, "", l); print "c " l }
     s == "Limits" && /^- \[[a-z]+\] [a-z0-9]+(-[a-z0-9]+)* : / {
       l = $0; sub(/^- \[[a-z]+\] /, "", l); sub(/ .*/, "", l); print "l " l }' "$1"
@@ -334,7 +334,7 @@ for (( i = fm_end; i < n; i++ )); do
         if [[ -n ${entry_at["Covers $head $r"]:-} ]]; then
           problem "$ln" "criterion $r appears twice under ### $head in Covers"
         elif [[ -n $known && ${crit_of[$head]} != *" $r "* ]]; then
-          problem "$ln" "covered $r is not a Definition of done entry name of ${path_of[$head]}"
+          problem "$ln" "covered $r is not a Criteria entry name of ${path_of[$head]}"
         fi
       else
         risks=$((risks + 1))

@@ -14,18 +14,8 @@ Every edit found here touches efforts that others may own, and a wrong edge spre
 
 Limits come from the request and from the efforts' own files. Record the respects edges found there, and add none, since a limit invented here would bind work nobody agreed to bind.
 
-## Output
+## Result
 
-The answer is this block alone, with no sentence before or after it, and every line in its template's shape.
+The result holds the duplicate, the parents, the children and the edits. `duplicate:` names the node that already carries this state, which for an effort extracted from a line is that line's own node. A parent or child that neither the input nor the files name is a guess. An edge a file already records is not. Edits change existing files, the placed effort's own file included when it has one, and each names one change someone could make without reading anything else: add `<slug>: []`, or `<slug>: [<approach>, ...]`, to `contributes-to:`, rename `<old>` to `<new>`, remove an entry. Take each edit's path and line from the script's output, which counts lines within each file.
 
-```
-duplicate: <slug>, at <its places>
-parents:
-- <slug>: <how reaching this state moves the parent's, in one clause>
-children:
-- <slug>: <how reaching the child's state moves this one, in one clause>
-edits:
-- <path>[:<line>]: <the change>
-```
-
-`duplicate:` names the node that already carries this state, which for an effort extracted from a line is that line's own node. Write `none` as the whole value of an empty field, as in `edits: none`. Mark each parent or child that neither the input nor the files name with ` # guessed`, as an effort file marks a guessed parent. An edge a file already records is not a guess. Edits change existing files, the placed effort's own file included when it has one, and each names one change someone could make without reading anything else: add `<slug>: []`, or `<slug>: [<approach>, ...]`, to `contributes-to:`, rename `<old>` to `<new>`, remove an entry. Take each edit's path and line from the script's output, which counts lines within each file.
+Then pick how to give it from the Output section of this skill's SKILL.md.

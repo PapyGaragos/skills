@@ -95,10 +95,10 @@ find_file() {
   fi
 }
 
-# The criteria a file's Definition of done names, in the file's order: the slug
+# The criteria a file's Criteria names, in the file's order: the slug
 # that opens each "- <slug>  Done when|Held when|Metric:" entry.
 criteria_of() {
-  awk '/^## / { s = $0; sub(/^## +/, "", s); sub(/[ \t]+$/, "", s); in_s = (s == "Definition of done"); next }
+  awk '/^## / { s = $0; sub(/^## +/, "", s); sub(/[ \t]+$/, "", s); in_s = (s == "Criteria"); next }
     in_s && /^- [a-z0-9]+(-[a-z0-9]+)*[ \t]+(Done when|Held when|Metric):/ { l = $0; sub(/^- /, "", l); sub(/[ \t].*/, "", l); print l }' "$1"
 }
 

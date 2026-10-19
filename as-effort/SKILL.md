@@ -7,7 +7,7 @@ description: Reframe an objective, goal, task or piece of work as an effort, mea
 
 An effort is a state someone wants to be true. It names what should be true, never the work to get there, so its name survives a change of approach. A finished piece of work names an effort as the reason it was done. Its intent line gives an end state and a purpose, which people steer by once the plan stops fitting (ADP 6-0, 2026). When a plan broke, people given an intent chose as its author would only about half the time (Shattuck, 2000).
 
-## What to produce
+## What to work out
 
 Three small things:
 
@@ -15,25 +15,13 @@ Three small things:
 - **Kind.** `achieve` is reached once, then done. `maintain` is reached if it isn't true yet, then held for as long as it matters. `optimize` is pushed as far as it will go.
 - **Intent.** One sentence, `<Verb> <end state>, so that <purpose>.` Its parts are fields too: the verb, the state, and the purpose. The purpose field is the text after `so that`, without those two words.
 
-When the request doesn't say otherwise, give one line as plain text, not in a code block:
-
-```
-[<kind>] <slug> : <Verb> <end state>, so that <purpose>.
-```
-
-When the request names fields or a format (YAML, CSV, prose, a table), give only those fields, in that format. "The one-liner" means the intent alone, and "a name" means the slug alone.
-
-Stop there. Don't explain the choices. Add one line only for a guess that `(guessed)` doesn't already mark.
-
-When the user wants the effort written down as a file, or another skill asks for one, read `references/effort-file.md` and follow it in place of this section. It takes the parents the caller gives, defines done and writes the file through this skill's scripts.
-
-When the request goes on to other work, such as a commit or a plan, give the effort line first anyway. That work names the effort by its slug as its reason. For the rest of the conversation, call the effort by its slug. Put the kind before it when that reads as a sentence: "this commit helps achieve `<slug>`". Don't restate the intent unless asked.
+Work them out with the steps below, then decide what to give back (see Output).
 
 ## Steps
 
 1. **Find the wanted state.** When the input names work, ask what is true once the work is done. Then test the result: if a change of approach would force a new name, it still names work. A vendor, tool or library in the state usually names the approach. If the user named a tool as the way to reach the state, leave it out without comment, since they may switch tools later. Keep it when being on that tool is the state they want. Name the state concretely enough that someone could tell whether it holds. Words like *reliable*, *good* or *clean* hide the state instead of naming it. If two people could disagree about whether the state holds, it isn't concrete yet, so name what they would look at.
 
-2. **Pick the kind.** Ask what happens after the state is first reached. If the job is over, it is `achieve`. If the state decays unless someone keeps working on it, it is `maintain`, whether or not it holds today. A state that could break but stays put once reached is still `achieve`. If there is a value with no finish line, it is `optimize`. A threshold to stay within, such as under a limit or above a floor, is a finish line, so holding it is `maintain`.
+2. **Pick the kind.** First ask whether success is a level or only a direction. When only a direction counts, lower or higher, and no level was stated or is plainly implied, it is `optimize`, even when the value must stay low or high over time: the period the value is counted over carries that. Wording like *as little as possible* or *ideally none* names a direction and its ideal, not a level. Never invent a level to make it fit another kind. When there is a level, ask what happens after the state is first reached. If the job is over, it is `achieve`. If the state decays unless someone keeps working on it, it is `maintain`, whether or not it holds today. A state that could break but stays put once reached is still `achieve`. A threshold to stay within, such as under a limit or above a floor, is a level, so holding it is `maintain`. A direction with a level it must never cross is `optimize`, with that level as a limit.
 
 3. **Write the intent with a verb from the kind's list.**
 
@@ -48,6 +36,19 @@ When the request goes on to other work, such as a commit or a plan, give the eff
 4. **Write the purpose.** The `so that` says how this state serves something larger. It does not restate the larger thing. Then imagine the likeliest way to reach the state stops working. The purpose should help someone choose between two other ways. If it doesn't, it is too vague to steer by, so name the larger outcome that depends on the state. A purpose that only says the state is useful (restorable, responsive, trusted) restates it. If the input gives no purpose, infer the likeliest one and mark it `(guessed)` so the user can correct it. The mark goes right after the purpose, before the final period: `so that <purpose> (guessed).`
 
 One input sometimes holds two independent wanted states. Give two efforts rather than joining them under one sentence. Reaching a state and then holding it is one `maintain` effort, not two.
+
+## Output
+
+Once the effort is worked out, decide whether anything goes back and in what form. When another skill's steps called this one, the mode is `carried`, whatever the call asks for, since its wording is the caller's and the result is theirs to use. Otherwise match the request against each mode below, read the reference of the one it fits, and follow it. Pick by what the request is for, not by what is quickest to give. The shape of the reply is in the reference and nowhere else, so read it before writing any reply, even a short answer to a person.
+
+| mode | when | reference |
+|---|---|---|
+| line | a person wants the effort stated, to read or to name other work by, such as a commit or a plan the request goes on to | `references/line.md` |
+| fields | the request names fields or a format (YAML, JSON, CSV, prose, a table), or asks for "the one-liner" or "a name" | `references/fields.md` |
+| effort file | the user wants the effort written down, filed or recorded, or to track work against it | `references/effort-file.md` |
+| carried | another skill's steps called this one, for the effort or its file | `references/carried.md` |
+
+Once the effort is named, work that follows names it by its slug as its reason. For the rest of the conversation, call the effort by its slug. Put the kind before it when that reads as a sentence: "this commit helps achieve `<slug>`". Don't restate the intent unless asked.
 
 ## When it doesn't fit
 

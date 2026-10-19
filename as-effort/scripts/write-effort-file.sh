@@ -166,7 +166,7 @@ render() {
       printf '\n%s\n' "${paragraphs[@]}"
     fi
     if (( ${#criteria[@]} )); then
-      printf '\n## Definition of done\n\n'
+      printf '\n## Criteria\n\n'
       printf '%s\n' "${criteria[@]}"
     fi
     printf '\n## Serves\n'

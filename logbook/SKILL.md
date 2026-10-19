@@ -1,6 +1,6 @@
 ---
 name: logbook
-description: Keep a running record of multi-step work - what was done, what came up, what was decided and why - so anyone can pick the work up later, and so choices can be audited with the context they were made in. Use for any effort that spans several steps or decisions (coding, debugging, research, migrations, planning, design, analysis), when resuming work that may have a .logbook, when a session may run out before the work is done, and when handing off to another agent or session. Start it without being asked; skip only trivial single-action tasks.
+description: Keep a running record of multi-step work - what was done, what came up, what was decided and why - so anyone can pick the work up later, and so choices can be audited with the context they were made in. Use for any effort that spans several steps or decisions (coding, debugging, research, migrations, planning, design, analysis), when asked to keep a logbook or a log of the work, when resuming work that may have a .logbook, when a session may run out before the work is done, and when handing off to another agent or session. Start it without being asked; skip only trivial single-action tasks.
 ---
 
 # Logbook
@@ -18,7 +18,7 @@ Write right after something worth recording happens, while the reasons are still
 - something turns out differently than expected
 - something blocks you
 - you pick between options, including the ones you didn't pick and why
-- you finish a step, or give one up and know why
+- you finish a step or a goal, or give one up and know why
 
 The logbook doesn't need to come before the work. It needs to exist before the reasons are forgotten. Entries written at the end of a long stretch keep the outcomes and lose the reasons, and the reasons are what the next reader lacks. When a session could end at any moment, ask yourself: if it stopped now, could someone else carry on from the logbook without redoing my work?
 
@@ -36,8 +36,8 @@ Nodes are addressed by path: `2.1` is the first child of the second goal, and `0
 |---|---|
 | a goal, or steps to take | `plan FILE PATH STEP... [--parallel]` |
 | a step already under way | `doing FILE PATH TEXT` |
-| steps already finished | `did FILE PATH TEXT...` |
-| starting or finishing a planned step | `start FILE PATH`, `done FILE PATH` |
+| steps finished without being planned first | `did FILE PATH TEXT...` |
+| starting or finishing a planned step or goal | `start FILE PATH`, `done FILE PATH` |
 | giving up a step, or ruling out an option | `drop FILE PATH REASON` |
 | context, a source, a justification | `note FILE PATH TEXT...` |
 | something unexpected, problems included; steps to fix or bypass it go under it | `surprise FILE PATH TEXT` |
@@ -46,7 +46,7 @@ Nodes are addressed by path: `2.1` is the first child of the second goal, and `0
 | candidate answers; steps taken to explore one go under it | `option FILE PATH TEXT...` |
 | the choice made | `decide FILE PATH [CHOICE] [--over OPTION REASON]... [--why REASON]` |
 
-`decide` goes on a question or blocker, recording CHOICE along with each option ruled out by `--over` and why it lost. On an option recorded earlier, it confirms that option. Other options stay open, as candidates that could come back later, until you `drop` the ones that are truly ruled out. A choice made while doing a step is a question or blocker first, then a decision on it.
+`decide` goes on a question or blocker, recording CHOICE along with each option `--over` rules out for good, and why. An option not picked but still possible, such as one waiting on something, stays out of `--over`: `note` on it why it wasn't picked, and it stays open as a candidate that could come back later, until you `drop` it once it is truly ruled out. CHOICE and `--over` can name an option recorded earlier, by its path or its text. A choice made while doing a step is a question or blocker first, then a decision on it.
 
 Run the script without arguments for the full usage.
 
